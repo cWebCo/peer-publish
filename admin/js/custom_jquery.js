@@ -14,7 +14,7 @@ jQuery.ajax({
 type: "POST",
 url: ajaxurl,
 //async: false,
-data:{action:'sendtoremote_distributor_machine',post_id:post_id,websites:checkValues},
+data:{action:'PPNM_sendtoremote_distributor_machine',post_id:post_id,websites:checkValues},
 success: function(data) {
 
 var sitename = data;

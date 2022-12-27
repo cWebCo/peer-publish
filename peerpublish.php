@@ -52,11 +52,11 @@ require plugin_dir_path( __FILE__ ) . 'includes/classes/classCwebdistributorMach
  *
  * @since    1.0.0
  */
-function PPNM__distributor_machine() { 
+function PPNM_distributor_machine() { 
 	$plugin = new PPNM_ClassdistributorMachine();
 	$plugin->run();
 }
-PPNM__distributor_machine(); 
+PPNM_distributor_machine(); 
 
 /* Constant */
 define('PPNM_PLUGIN_FS_PATH_MACHINE', plugin_dir_path(__FILE__) );

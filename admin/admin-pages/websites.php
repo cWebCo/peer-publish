@@ -9,14 +9,18 @@ Author: WebGarh Solutions
 Author URI: http://www.cwebconsultants.com/
 Text Domain: peer_publish
 */
+
 global $wpdb;
-$query="SELECT  * FROM  `".$wpdb->prefix."subwebsites` where network ='internal'"; 
-$listwebsitesinternal=$wpdb->get_results($query);
+
+$listwebsitesinternal= $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".$wpdb->prefix."subwebsites` WHERE network =%d","internal" ) );
+$perma_delete='';
+if(isset($_GET['act'])){
 $perma_delete=sanitize_text_field($_GET['act']);
+}
 if($perma_delete=='perma_delete'):
     $id=sanitize_text_field($_GET['id']);
 	$wpdb->query("DELETE FROM `".$wpdb->prefix."subwebsites` WHERE id = '$id'");
-    foreceRedirect(admin_url('admin.php?page=websites'));
+    PPNM_foreceRedirect(admin_url('admin.php?page=websites'));
 endif;
  
 ?>

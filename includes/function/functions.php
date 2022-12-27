@@ -4,66 +4,12 @@
  * Author URI:        http://www.cwebconsultants.com/
  */
 /* Function for session message */
-if (!function_exists('set_error_message')) {
-    function set_error_message($msg,$type){
-        @session_start();
-        if(isset($_SESSION['error_msg'])):  
-                unset($_SESSION['error_msg']);
-        endif;  
-        $_SESSION['error_msg']['msg']=$msg;
-        $_SESSION['error_msg']['error']=$type;
-        return true;
-    }
-}
-
-if (!function_exists('show_error_message')) {
-    function show_error_message(){
-        $msg='';
-        @session_start();
-        if(isset($_SESSION['error_msg']) && isset($_SESSION['error_msg']['msg'])): 
-            if($_SESSION['error_msg']['error']=='1'):
-                    $tp='message_error';
-            else:
-                    $tp='message_success';
-            endif;  
-            $msg.='<div class="portlet light pro_mess"><div class="message center pmpro_message '.$tp.'">';
-                    $msg.=$_SESSION['error_msg']['msg']; 
-            $msg.='</div></div>'; 
-            unset($_SESSION['error_msg']['msg']);
-            unset($_SESSION['error_msg']['error']);
-            unset($_SESSION['error_msg']);
-        endif;  
-
-        return $msg;
-    }
-}   
-
-if (!function_exists('pr')) {
-    function pr($post){
-        echo '<pre>';
-            print_r($post);
-        echo '</pre>';
-    }
-}
 
 
-if (!function_exists('do_account_redirect')) {
-       //Finishing setting templates 
-       function do_account_redirect($url) {
-               global $post, $wp_query;
-                if (have_posts()) {
-                       include($url);
-                       die();
-               }else {
-                       $wp_query->is_404 = true;
-               }
-         }
-}
-    
-/* force redirect */
-    
-if (!function_exists('foreceRedirect')) {
-    function foreceRedirect($filename)
+/*add post filed*/
+
+if (!function_exists('PPNM_foreceRedirect')) {
+    function PPNM_foreceRedirect($filename)
     {
         if (!headers_sent())
                  header('Location: '.$filename);
@@ -77,8 +23,6 @@ if (!function_exists('foreceRedirect')) {
         }
     }   
 }
-
-/*add post filed*/
 add_action('admin_head', 'PPNM_my_custom_fonts');
   function PPNM_my_custom_fonts() {
     return '<style type="text/css">
@@ -109,8 +53,9 @@ add_action( 'manage_post_posts_custom_column' , 'PPNM_custom_post_column_distrib
           global $wpdb, $post;
           $post_meta_exp=get_post_meta( $post->ID, 'exported_to', true);
           $unserialize_old_exported_to_websites=unserialize($post_meta_exp);
-          $query="SELECT  * FROM  `".$wpdb->prefix."subwebsites`";
-          $websiteslist=$wpdb->get_results($query);
+         
+          $websiteslist = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".$wpdb->prefix."subwebsites`"));
+          
           foreach ($websiteslist as $list_website) {
             if (in_array($list_website->id,$unserialize_old_exported_to_websites)) {
               echo $list_website->sitename."<br>";
@@ -143,7 +88,7 @@ add_action( 'add_meta_boxes', 'PPNM_meta_box_add_distributor_machine' );
       $screen = get_current_screen();
       if ( 'add' != $screen->action ) {
           if ($user->roles[0]=='administrator' || $user->roles[0]=='editor') {
-              add_meta_box( 'my-meta-box-id', 'Select Websites to Post this News', 'meta_box_for_distributor_machine', 'post', 'side', 'default' );
+              add_meta_box( 'my-meta-box-id', 'Select Websites to Post this News', 'PPNM_meta_box_for_distributor_machine', 'post', 'side', 'default' );
           }
       }
   }
@@ -152,8 +97,10 @@ add_action( 'add_meta_boxes', 'PPNM_meta_box_add_distributor_machine' );
       global $wpdb, $post;
       $post_meta_exp=get_post_meta( $post->ID, 'exported_to', true);
       @$unserialize_old_exported_to_websites=unserialize($post_meta_exp);
-      $query="SELECT  * FROM  `".$wpdb->prefix."subwebsites`";
-      $listwebsites=$wpdb->get_results($query);
+      //$query="SELECT  * FROM  `".$wpdb->prefix."subwebsites`";
+
+      $listwebsites = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".$wpdb->prefix."subwebsites`") );
+    
       ?>
       <table style="width:100%;">
           <tr>
@@ -196,13 +143,13 @@ add_action('wp_ajax_nopriv_PPNM_sendtoremote_distributor_machine', 'PPNM_sendtor
                 
                 foreach ($websites as $key => $site_val) {
                     global $wpdb;
-                            if (!in_array($site_val,$unserialize_old_exported_to_websites)) {
-                            $query="SELECT  * FROM  `".$wpdb->prefix."subwebsites` where id='$site_val'"; 
-                            $website_info=$wpdb->get_results($query);
-                            $str_url= $website_info[0]->siteurl;
-                            $username = $website_info[0]->dbusername;
-                            $password = $website_info[0]->dbpassword;
-                            $content = $postdata->post_content;
+                            if(!in_array($site_val,$unserialize_old_exported_to_websites)){
+                           
+                             $website_info= $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".$wpdb->prefix."subwebsites` WHERE id =%d",$site_val));
+                            $str_url=$website_info[0]->siteurl;
+                            $username=$website_info[0]->dbusername;
+                            $password=$website_info[0]->dbpassword;
+                            $content=$postdata->post_content;
                             $regex = '/src="([^"]*)"/';
                             preg_match_all( $regex, $content, $matches );
                             $matches = array_reverse($matches);
@@ -353,12 +300,14 @@ add_action('wp_ajax_nopriv_PPNM_sendtoremote_distributor_machine', 'PPNM_sendtor
             }
         }
         
-        $query="SELECT  * FROM  `".$wpdb->prefix."subwebsites`";
-        $listwebsites=$wpdb->get_results($query);
+
+        //$query="SELECT  * FROM  `".$wpdb->prefix."subwebsites`";
+       // $listwebsites=$wpdb->get_results($query);
+          $listwebsites = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".$wpdb->prefix."subwebsites`"));
         $site_id=array();
            foreach ($listwebsites as $list_website) {
                          if (in_array($list_website->id,$unserialize_old_exported_to_websites)) {
-                  $site_id[] = $list_website->sitename;      
+                  $site_id[]=$list_website->sitename;      
                 }
             }
 

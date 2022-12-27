@@ -106,7 +106,7 @@ class PPNM_Admin_News_Machine {
                 wp_die(__('You do not have sufficient permissions to access this page.','peer_publish'));
             } else {
                $this->lets_review_admin_head();
-                include(ADV_PLUGIN_FS_PATH_MACHINE . 'admin/admin-pages/about_info.php');
+                include(PPNM_PLUGIN_FS_PATH_MACHINE . 'admin/admin-pages/about_info.php');
                 $this->lets_review_admin_footer();
             }   
         }
@@ -117,7 +117,7 @@ class PPNM_Admin_News_Machine {
                 wp_die(__('You do not have sufficient permissions to access this page.','peer_publish'));
             } else {
             	 $this->lets_review_admin_head();
-                include(ADV_PLUGIN_FS_PATH_MACHINE . 'admin/admin-pages/websites.php');
+                include(PPNM_PLUGIN_FS_PATH_MACHINE . 'admin/admin-pages/websites.php');
                   $this->lets_review_admin_footer();
 
             }   
@@ -129,7 +129,7 @@ class PPNM_Admin_News_Machine {
                 wp_die(__('You do not have sufficient permissions to access this page.','peer_publish'));
             } else {
  $this->lets_review_admin_head();
-                include(ADV_PLUGIN_FS_PATH_MACHINE . 'admin/admin-pages/newwebsite.php');
+                include(PPNM_PLUGIN_FS_PATH_MACHINE . 'admin/admin-pages/newwebsite.php');
                 $this->lets_review_admin_footer();
             }   
         }

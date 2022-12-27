@@ -7,9 +7,13 @@ Author: WebGarh Solutions
 Author URI: http://www.cwebconsultants.com/
 Text Domain: peer_publish
 */
+
+
 global $wpdb;
 $act=(isset($_REQUEST['act']))?sanitize_text_field($_REQUEST['act']):'list';
+if(isset($_POST['save_internal'])){
 $save_internal=sanitize_text_field($_POST['save_internal']);
+}
 if(isset($_POST['save_internal']) && $save_internal=='Save'){
 	if(empty($_POST['sitename']) || empty($_POST['siteurl']) || empty($_POST['username']) || empty($_POST['password'])){
 		$message='<span style="color:red;text-align: left;display: block;">'. __("Please fill all required fields","peer_publish") .'</span>';
@@ -48,14 +52,17 @@ if(isset($_POST['update_internal']) && $_POST['update_internal']=='Update'){
 
 
 if(isset($_POST['cancel']) && sanitize_text_field($_POST['cancel'])=='Cancel'){
-	foreceRedirect(admin_url('admin.php?page=websites') );
+	PPNM_foreceRedirect(admin_url('admin.php?page=websites') );
 }	
 
 if($act!='edit'){	
 ?>
 <div class="wrap">
 	
-	<?php echo (!empty($message)) ? $message : ''; ?>
+	<?php if(!empty($message)){
+		echo $message;
+	}
+	//echo (!empty($message)) ? $message : ''; ?>
 	<form method="post" action="" id="internal_form" style="float: left; width: 55%;">
 	<table class="form-table">
 		<tr>
@@ -100,8 +107,8 @@ if($act!='edit'){
 <div style="clear:both"></div>
 <?php } if($act =='edit'){
 	if(!empty($_GET['id'])){
-		$query="SELECT  * FROM  `".$wpdb->prefix."subwebsites` where id='".sanitize_text_field($_GET['id'])."'";
-		$website_detail=$wpdb->get_results($query);
+		$id=sanitize_text_field($_GET['id']);
+       $website_detail = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM `".$wpdb->prefix."subwebsites` WHERE ID = %d", $id ) );
 	}
 ?>
 
@@ -110,7 +117,10 @@ if($act!='edit'){
 		 $network=sanitize_text_field($_GET['network']);
      if($network=='internal'){ ?>
      	<form method="post" action="" style="float: left; width: 55%;">
-			<?php echo (!empty($message)) ? $message : ''; ?>
+			<?php 
+			if(!empty($message)){
+			echo $message;
+			}; ?>
 			<table class="form-table">
 				<tbody>
 					<tr>
