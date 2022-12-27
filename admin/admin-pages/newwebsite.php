@@ -59,9 +59,9 @@ if($act!='edit'){
 ?>
 <div class="wrap">
 	
-	<?php if(!empty($message)){
+	<?php /*if(!empty($message)){
 		echo $message;
-	}
+	}*/
 	//echo (!empty($message)) ? $message : ''; ?>
 	<form method="post" action="" id="internal_form" style="float: left; width: 55%;">
 	<table class="form-table">
@@ -118,9 +118,9 @@ if($act!='edit'){
      if($network=='internal'){ ?>
      	<form method="post" action="" style="float: left; width: 55%;">
 			<?php 
-			if(!empty($message)){
+			/*if(!empty($message)){
 			echo $message;
-			}; ?>
+			};*/ ?>
 			<table class="form-table">
 				<tbody>
 					<tr>
