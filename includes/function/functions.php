@@ -58,7 +58,7 @@ add_action( 'manage_post_posts_custom_column' , 'PPNM_custom_post_column_distrib
           
           foreach ($websiteslist as $list_website) {
             if (in_array($list_website->id,$unserialize_old_exported_to_websites)) {
-              echo $list_website->sitename."<br>";
+              echo esc_html($list_website->sitename)."<br>";
             }
           }
         break;
@@ -112,7 +112,7 @@ add_action( 'add_meta_boxes', 'PPNM_meta_box_add_distributor_machine' );
                         } else {
                             $checked='';
                         } ?>
-                        <input type="checkbox" class="check_website" name="websites[]" value="<?php echo $list->id; ?>" <?php echo esc_html($checked);?>><?php echo esc_html($list->sitename); ?>
+                        <input type="checkbox" class="check_website" name="websites[]" value="<?php echo esc_html($list->id); ?>" <?php echo esc_html($checked);?>><?php echo esc_html($list->sitename); ?>
                     <?php }
                      ?>
                      <input type="hidden" id="customajaxurl" name="customajaxurl" value="<?php echo admin_url('admin-ajax.php'); ?>">
